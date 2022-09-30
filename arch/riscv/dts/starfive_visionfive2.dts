@@ -1,0 +1,234 @@
+// SPDX-License-Identifier: GPL-2.0 OR MIT
+/*
+ * Copyright (C) 2022 StarFive Technology Co., Ltd.
+ */
+
+/dts-v1/;
+
+#include "jh7110.dtsi"
+#include <dt-bindings/pinctrl/pinctrl-starfive-jh7110.h>
+/ {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	model = "StarFive VisionFive V2";
+	compatible = "starfive,jh7110";
+
+	aliases {
+		spi0 = &qspi;
+		mmc0 = &sdio0;
+		mmc1 = &sdio1;
+	};
+
+	chosen {
+		stdout-path = "/soc/serial@10000000:115200";
+	};
+
+	cpus {
+		timebase-frequency = <4000000>;
+	};
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x0 0x40000000 0x1 0x0>;
+	};
+
+	soc {
+		sys_syscon: sys_syscon@13030000 {
+			compatible = "syscon";
+			reg = <0x0 0x13030000 0x0 0x1000>;
+		};
+	};
+};
+
+&S76_0 {
+	status = "okay";
+};
+
+&osc {
+	clock-frequency = <24000000>;
+};
+
+&clk_rtc {
+	clock-frequency = <32768>;
+};
+
+&gmac0_rmii_refin {
+	clock-frequency = <50000000>;
+};
+
+&gmac0_rgmii_rxin {
+	clock-frequency = <125000000>;
+};
+
+&gmac1_rmii_refin {
+	clock-frequency = <50000000>;
+};
+
+&gmac1_rgmii_rxin {
+	clock-frequency = <125000000>;
+};
+
+&i2stx_bclk_ext {
+	clock-frequency = <12288000>;
+};
+
+&i2stx_lrck_ext {
+	clock-frequency = <192000>;
+};
+
+&i2srx_bclk_ext {
+	clock-frequency = <12288000>;
+};
+
+&i2srx_lrck_ext {
+	clock-frequency = <192000>;
+};
+
+&tdm_ext {
+	clock-frequency = <49152000>;
+};
+
+&mclk_ext {
+	clock-frequency = <12288000>;
+};
+
+&gpio {
+	status = "okay";
+	uart0_pins: uart0-0 {
+		tx-pins {
+			pinmux = <GPIOMUX(5, GPOUT_SYS_UART0_TX,
+						GPOEN_ENABLE, GPI_NONE)>;
+			bias-disable;
+			drive-strength = <12>;
+			input-disable;
+			input-schmitt-disable;
+			slew-rate = <0>;
+		};
+
+		rx-pins {
+			pinmux = <GPIOMUX(6, GPOUT_LOW,
+						GPOEN_DISABLE, GPI_SYS_UART0_RX)>;
+			bias-pull-up;
+			drive-strength = <2>;
+			input-enable;
+			input-schmitt-enable;
+			slew-rate = <0>;
+		};
+	};
+
+	mmc0_pins: mmc0-pins {
+		 mmc0-pins-rest {
+			pinmux = <GPIOMUX(62, GPOUT_SYS_SDIO0_RST,
+						GPOEN_ENABLE, GPI_NONE)>;
+			bias-pull-up;
+			drive-strength = <12>;
+			input-disable;
+			input-schmitt-disable;
+			slew-rate = <0>;
+		};
+	};
+
+	sdcard1_pins: sdcard1-pins {
+		sdcard1-pins0 {
+			pinmux = <GPIOMUX(10, GPOUT_SYS_SDIO1_CLK,
+						GPOEN_ENABLE, GPI_NONE)>;
+			bias-pull-up;
+			drive-strength = <12>;
+			input-disable;
+			input-schmitt-disable;
+			slew-rate = <0>;
+		};
+
+		sdcard1-pins1 {
+			pinmux = <GPIOMUX(9, GPOUT_SYS_SDIO1_CMD,
+						GPOEN_SYS_SDIO1_CMD, GPI_SYS_SDIO1_CMD)>;
+			bias-pull-up;
+			drive-strength = <12>;
+			input-enable;
+			input-schmitt-enable;
+			slew-rate = <0>;
+		};
+
+		sdcard1-pins2 {
+			pinmux = <GPIOMUX(11, GPOUT_SYS_SDIO1_DATA0,
+						GPOEN_SYS_SDIO1_DATA0, GPI_SYS_SDIO1_DATA0)>;
+			bias-pull-up;
+			drive-strength = <12>;
+			input-enable;
+			input-schmitt-enable;
+			slew-rate = <0>;
+		};
+
+		sdcard1-pins3 {
+			pinmux = <GPIOMUX(12, GPOUT_SYS_SDIO1_DATA1,
+						GPOEN_SYS_SDIO1_DATA1, GPI_SYS_SDIO1_DATA1)>;
+			bias-pull-up;
+			drive-strength = <12>;
+			input-enable;
+			input-schmitt-enable;
+			slew-rate = <0>;
+		};
+
+		sdcard1-pins4 {
+			pinmux = <GPIOMUX(7, GPOUT_SYS_SDIO1_DATA2,
+						GPOEN_SYS_SDIO1_DATA2, GPI_SYS_SDIO1_DATA2)>;
+			bias-pull-up;
+			drive-strength = <12>;
+			input-enable;
+			input-schmitt-enable;
+			slew-rate = <0>;
+		};
+
+		sdcard1-pins5 {
+			pinmux = <GPIOMUX(8, GPOUT_SYS_SDIO1_DATA3,
+						GPOEN_SYS_SDIO1_DATA3, GPI_SYS_SDIO1_DATA3)>;
+			bias-pull-up;
+			drive-strength = <12>;
+			input-enable;
+			input-schmitt-enable;
+			slew-rate = <0>;
+		};
+	};
+};
+
+&sdio0 {
+	bus-width = <8>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc0_pins>;
+	status = "okay";
+};
+
+&sdio1 {
+	bus-width = <4>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdcard1_pins>;
+	status = "okay";
+};
+
+&uart0 {
+	reg-offset = <0>;
+	current-speed = <115200>;
+	clock-frequency = <24000000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins>;
+	status = "okay";
+};
+
+&qspi {
+	spi-max-frequency = <250000000>;
+	status = "okay";
+
+	nor-flash@0 {
+		compatible = "jedec,spi-nor";
+		reg=<0>;
+		spi-max-frequency = <100000000>;
+		cdns,tshsl-ns = <1>;
+		cdns,tsd2d-ns = <1>;
+		cdns,tchsh-ns = <1>;
+		cdns,tslch-ns = <1>;
+	};
+};
+
+&syscrg {
+	starfive,sys-syscon = <&sys_syscon>;
+};
